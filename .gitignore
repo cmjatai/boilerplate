@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# frontend
+# Node modules for frontend
+node_modules/
+
+# vscode
+.vscode
