@@ -17,14 +17,15 @@ uma aplicação web com **backend em Django** e **frontend moderno servido pelo 
 2. [Estrutura de pastas](#estrutura-de-pastas)
 3. [Pré-requisitos](#pré-requisitos)
 4. [Instalação](#instalação)
-5. [Rodando o projeto em desenvolvimento](#rodando-o-projeto-em-desenvolvimento)
-6. [Como o Django conversa com o Vite](#como-o-django-conversa-com-o-vite)
-7. [O código do backend em detalhes](#o-código-do-backend-em-detalhes)
-8. [Build de produção](#build-de-produção)
-9. [Qualidade de código (lint e format)](#qualidade-de-código-lint-e-format)
-10. [O estado atual do Vue — e o seu exercício](#o-estado-atual-do-vue--e-o-seu-exercício)
-11. [Problemas comuns (troubleshooting)](#problemas-comuns-troubleshooting)
-12. [Licença](#licença)
+5. [Ativando o virtualenv (sem precisar digitar `poetry run` sempre)](#ativando-o-virtualenv-sem-precisar-digitar-poetry-run-sempre)
+6. [Rodando o projeto em desenvolvimento](#rodando-o-projeto-em-desenvolvimento)
+7. [Como o Django conversa com o Vite](#como-o-django-conversa-com-o-vite)
+8. [O código do backend em detalhes](#o-código-do-backend-em-detalhes)
+9. [Build de produção](#build-de-produção)
+10. [Qualidade de código (lint e format)](#qualidade-de-código-lint-e-format)
+11. [O estado atual do Vue — e o seu exercício](#o-estado-atual-do-vue--e-o-seu-exercício)
+12. [Problemas comuns (troubleshooting)](#problemas-comuns-troubleshooting)
+13. [Licença](#licença)
 
 ---
 
@@ -143,6 +144,85 @@ npm install
 
 Isso instala Vite, Vue, vue-router, Pinia, axios, jQuery, lodash, ESLint, Prettier etc.,
 conforme declarado em [package.json](/home/leandrojatai/desenvolvimento/envs/boilerplate/package.json).
+
+---
+
+## Ativando o virtualenv (sem precisar digitar `poetry run` sempre)
+
+Todo comando Python deste README está escrito como `poetry run python manage.py ...`. O prefixo
+`poetry run` existe porque o Poetry instala as dependências em um **ambiente virtual isolado**,
+separado do Python do seu sistema — e `poetry run <comando>` executa aquele comando *dentro*
+desse ambiente, só para aquela chamada.
+
+Se preferir não digitar `poetry run` toda hora, você pode **ativar o ambiente virtual na sua
+sessão de terminal**. Depois de ativado, basta usar `python manage.py ...` diretamente (sem o
+prefixo) enquanto aquele terminal estiver aberto.
+
+> Isso é só conveniência de terminal — não muda nada no projeto nem precisa ser commitado.
+
+### Opção 1 — `poetry env activate` (built-in, recomendada)
+
+A partir do Poetry 2.0, o comando `poetry shell` foi removido do núcleo. No lugar, existe
+`poetry env activate`, que **imprime** o comando de ativação em vez de ativá-lo diretamente
+(porque um subprocesso do Poetry não consegue alterar o shell que o chamou). Por isso, você
+precisa executar o comando impresso, com `eval`:
+
+```bash
+eval $(poetry env activate)
+```
+
+Ou, de forma equivalente e mais explícita:
+
+```bash
+source "$(poetry env info --path)/bin/activate"
+```
+
+Depois disso, o prompt do terminal deve mostrar o nome do ambiente virtual entre parênteses
+(ex.: `(boilerplate-py3.12)`), e os comandos funcionam sem o prefixo:
+
+```bash
+python manage.py runserver
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+Para sair do ambiente virtual e voltar ao Python do sistema:
+
+```bash
+deactivate
+```
+
+> ⚠️ A ativação vale **só para o terminal atual**. Se você abrir um terminal novo, precisa
+> ativar de novo nele.
+
+### Opção 2 — reinstalar o comando `poetry shell` via plugin
+
+Se você preferir a sintaxe antiga (`poetry shell`), instale o plugin oficial uma única vez:
+
+```bash
+poetry self add poetry-plugin-shell
+```
+
+A partir daí, basta rodar, dentro da pasta do projeto:
+
+```bash
+poetry shell
+```
+
+Isso abre um novo subshell já com o ambiente virtual ativado (para sair, digite `exit`).
+
+### Dica para o seu editor (VS Code)
+
+Independentemente da opção escolhida, para que o VS Code (autocomplete, lint do Pylance, debug)
+use o Python correto, aponte o interpretador do workspace para o caminho do ambiente virtual do
+Poetry:
+
+```bash
+poetry env info --path
+```
+
+Use o caminho impresso (algo como `.../virtualenvs/boilerplate-xxxxxxxx-py3.12`) para selecionar
+o interpretador em **Python: Select Interpreter** na paleta de comandos do VS Code.
 
 ---
 
